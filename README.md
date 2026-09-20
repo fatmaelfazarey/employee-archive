@@ -1,48 +1,54 @@
-﻿# نظام أرشيف الموظفين
+# Employee Archive System
 
-نظام أرشيف عربي لتخزين بيانات الموظفين وتقييماتهم، مع بحث وفلترة واستيراد/تصدير Excel.
+An Arabic employee archive system for storing employee data and evaluations, with search, filtering, and Excel import/export.
 
-## التشغيل السريع
+## Quick Start
 
-    npm install
-    npm start
+```
+npm install
+npm start
+```
 
-## البناء للويندوز
+## Windows Build
 
-    npm run build:win
+```
+npm run build:win
+```
 
-الناتج: dist/EmployeeSystem.exe
+Output: `dist/EmployeeSystem.exe`
 
-## مكان قاعدة البيانات
+## Database Location
 
-- في وضع التطوير: database/employees.db
-- في النسخة المحمولة: بجانب الملف التنفيذي
+* In development mode: `database/employees.db`
+* In the portable version: next to the executable file
 
-## إضافة حقل جديد
+## Adding a New Field
 
-كل الحقول معرّفة في ملف واحد فقط: src/shared/fields.js
+All fields are defined in a single file: `src/shared/fields.js`
 
-أضف object جديد في المصفوفة، وبعدها:
+Add a new object to the array, then:
 
-- في وضع التطوير: النظام هيضيف العمود تلقائيًا (migration)
-- هتلاقي الحقل ظهر في الفورم والجدول والفلاتر والإكسل
+* In development mode: the system will automatically add the column (migration)
+* The field will appear in the form, table, filters, and Excel
 
-بعد التعديل، شغّل:
+After making changes, run:
 
-    npm run sync:fields
+```
+npm run sync:fields
+```
 
-لتحديث نسخة الحقول في الواجهة.
+This updates the field definitions used by the frontend.
 
-## مكوّنات المشروع
+## Project Components
 
-- src/shared/fields.js — تعريف كل الحقول (مصدر واحد للحقيقة)
-- src/main/database.js — فتح SQLite + migrations
-- src/main/excel.js — استيراد/تصدير Excel
-- src/main/ipc.js — قنوات IPC
-- src/renderer/ — الواجهة (HTML/CSS/JS خام)
+* `src/shared/fields.js` — Definition of all fields (single source of truth)
+* `src/main/database.js` — SQLite connection and migrations
+* `src/main/excel.js` — Excel import/export
+* `src/main/ipc.js` — IPC channels
+* `src/renderer/` — Frontend UI (raw HTML/CSS/JS)
 
-## ملاحظات USB
+## USB Notes
 
-- استخدم "إخراج آمن" قبل فصل الـ USB
-- خذ نسخة احتياطية من employees.db
-- التطبيق يفعّل synchronous=FULL لتقليل خطر التلف
+* Safely eject the USB drive before removing it
+* Keep a backup of `employees.db`
+* The application enables `synchronous=FULL` to reduce the risk of database corruption
