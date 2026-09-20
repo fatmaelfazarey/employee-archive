@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>نظام أرشيف الموظفين</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-right">
+        <h1>نظام أرشيف الموظفيhhhhhhhhhhhhhhhhhhhhhhhن</h1>
+        <span id="db-status" class="db-status" title=""></span>
+      </div>
+      <div class="header-left">
+        <button id="btn-template" class="btn btn-outline" title="تحميل قالب فارغ">قالب Excel</button>
+        <button id="btn-import" class="btn btn-outline">استيراد Excel</button>
+        <button id="btn-export" class="btn btn-outline">تصدير Excel</button>
+        <button id="btn-add" class="btn btn-primary">+ إضافة موظف</button>
+      </div>
+    </header>
+
+    <!-- Search + Filters -->
+    <div class="filters-bar">
+      <div class="search-box">
+        <input type="text" id="search-input" placeholder="ابحث بالاسم، الرقم القومي، الهاتف، الوظيفة، الإدارة، المدرسة..." autocomplete="off" />
+        <button id="btn-clear-search" class="clear-btn" title="مسح">✕</button>
+      </div>
+      <div id="filters-container" class="filters-container"></div>
+      <button id="btn-clear-filters" class="btn btn-outline btn-sm">مسح الفلاتر</button>
+    </div>
+
+    <!-- Messages -->
+    <div id="message-area"></div>
+
+    <!-- Info bar -->
+    <div class="info-bar">
+      <span id="record-count">0 سجل</span>
+      <span id="filter-indicator" class="hidden">— فلترة مُطبقة</span>
+    </div>
+
+    <!-- Table -->
+    <div class="table-container">
+      <table id="employee-table">
+        <thead id="table-head"></thead>
+        <tbody id="employee-tbody">
+          <tr><td class="empty-row">جاري التحميل...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Modal: Add/Edit -->
+  <div id="modal-form" class="modal-overlay hidden">
+    <div class="modal modal-large">
+      <div class="modal-header">
+        <h2 id="modal-form-title">إضافة موظف</h2>
+        <button class="modal-close" data-close="modal-form">✕</button>
+      </div>
+      <form id="employee-form">
+        <input type="hidden" id="form-id" />
+        <div id="form-fields" class="form-grid"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" data-close="modal-form">إلغاء</button>
+          <button type="submit" class="btn btn-primary">حفظ</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Details -->
+  <div id="modal-details" class="modal-overlay hidden">
+    <div class="modal modal-large">
+      <div class="modal-header">
+        <h2>تفاصيل الموظف</h2>
+        <button class="modal-close" data-close="modal-details">✕</button>
+      </div>
+      <div id="details-content" class="details-content"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" data-close="modal-details">إغلاق</button>
+        <button type="button" id="btn-edit-from-details" class="btn btn-primary">تعديل</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Delete -->
+  <div id="modal-delete" class="modal-overlay hidden">
+    <div class="modal modal-small">
+      <div class="modal-header">
+        <h2>تأكيد الحذف</h2>
+        <button class="modal-close" data-close="modal-delete">✕</button>
+      </div>
+      <p id="delete-message">هل أنت متأكد من حذف هذا الموظف؟</p>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" data-close="modal-delete">إلغاء</button>
+        <button type="button" id="btn-confirm-delete" class="btn btn-danger">حذف</button>
+      </div>
+    </div>
+  </div>
+
+    <!-- Modal: Evaluation -->
+  <!-- <div id="modal-eval" class="modal-overlay hidden">
+    <div class="modal modal-large">
+      <div class="modal-header">
+        <h2 id="eval-modal-title">إضافة تقييم</h2>
+        <button class="modal-close" data-close="modal-eval">✕</button>
+      </div>
+      <form id="eval-form">
+        <input type="hidden" id="eval-id" />
+        <input type="hidden" id="eval-employee-id" />
+
+        <div class="eval-section">
+          <h3 class="eval-section-title">بيانات التقييم</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>السنة الدراسية</label>
+              <input type="text" id="eval_year" placeholder="مثال: 2024/2025" />
+            </div>
+            <div class="form-group">
+              <label>فترة التقييم من</label>
+              <input type="date" id="period_from" />
+            </div>
+            <div class="form-group">
+              <label>فترة التقييم إلى</label>
+              <input type="date" id="period_to" />
+            </div>
+          </div>
+        </div>
+
+        <div class="eval-section">
+          <h3 class="eval-section-title">بنود التقييم</h3>
+          <table class="eval-table">
+            <thead>
+              <tr>
+                <th style="width: 50%;">البند</th>
+                <th style="width: 15%;">الحد الأقصى</th>
+                <th style="width: 18%;">الرقم</th>
+                <th style="width: 17%;">الحرف</th>
+              </tr>
+            </thead>
+            <tbody id="eval-items-body"></tbody>
+            <tfoot>
+              <tr class="eval-total-row">
+                <td><strong>المجموع</strong></td>
+                <td><strong id="eval-max-total">100</strong></td>
+                <td><input type="number" id="eval-total-score" step="0.01" /></td>
+                <td><input type="text" id="eval-rating" placeholder="مرتبة التقدير" /></td>
+              </tr>
+            </tfoot>
+          </table>
+          <div class="eval-actions">
+            <button type="button" id="btn-recalc" class="btn btn-outline btn-sm">إعادة حساب المجموع والمرتبة</button>
+          </div>
+        </div>
+
+        <div class="eval-section">
+          <h3 class="eval-section-title">بيانات إضافية</h3>
+          <div class="form-grid">
+            <div class="form-group full-width">
+              <label>عرض على لجنة الموارد البشرية</label>
+              <textarea id="committee_notes" rows="2"></textarea>
+            </div>
+            <div class="form-group full-width">
+              <label>الجزاءات التأديبية</label>
+              <textarea id="penalties" rows="2"></textarea>
+            </div>
+            <div class="form-group full-width">
+              <label>الأعمال المبادرة</label>
+              <textarea id="initiatives" rows="2"></textarea>
+            </div>
+            <div class="form-group full-width">
+              <label>التقدير المادي والأدبي</label>
+              <textarea id="appreciation" rows="2"></textarea>
+            </div>
+            <div class="form-group full-width">
+              <label>ملاحظات</label>
+              <textarea id="notes" rows="2"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" data-close="modal-eval">إلغاء</button>
+          <button type="submit" class="btn btn-primary">حفظ التقييم</button>
+        </div>
+      </form>
+    </div>
+  </div> -->
+  
+<script src="js/fields-bundle.js"></script>
+  <!-- Modal: Evaluation (3 columns) -->
+  <div id="modal-eval" class="modal-overlay hidden z-index">
+    <div class="modal" style="max-width: 1200px;">
+      <div class="modal-header">
+        <h2 id="eval-modal-title">إضافة تقييم</h2>
+        <button class="modal-close" data-close="modal-eval">✕</button>
+      </div>
+      <form id="eval-form">
+        <input type="hidden" id="eval-id" />
+        <input type="hidden" id="eval-employee-id" />
+
+        <div class="eval-section">
+          <h3 class="eval-section-title">بيانات التقييم</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>السنة الدراسية</label>
+              <input type="text" id="eval_year" placeholder="مثال: 2024/2025" />
+            </div>
+            <div class="form-group">
+              <label>فترة التقييم من</label>
+              <input type="date" id="period_from" />
+            </div>
+            <div class="form-group">
+              <label>فترة التقييم إلى</label>
+              <input type="date" id="period_to" />
+            </div>
+          </div>
+        </div>
+
+        <div class="eval-section">
+          <h3 class="eval-section-title">بنود التقييم</h3>
+          <div class="eval-table-wrap">
+        
+    <table class="eval-table">
+              <thead>
+                <tr>
+                  <th style="width: 30%;">البند</th>
+                  <th style="width: 8%;">الحد الأقصى</th>
+                  <th class="col-direct">الرئيس المباشر</th>
+                  <th class="col-local">المدير المحلي</th>
+                  <th class="col-top">الرئيس الأعلى</th>
+                </tr>
+              </thead>
+              <tbody id="eval-items-body"></tbody>
+              <tfoot>
+                <tr class="eval-total-row">
+                  <td><strong>المجموع</strong></td>
+                  <td><strong id="eval-max-total">100</strong></td>
+                  <td><input type="number" id="total_direct" step="0.01" /></td>
+                  <td><input type="number" id="total_local" step="0.01" /></td>
+                  <td><input type="number" id="total_top" step="0.01" /></td>
+                </tr>
+                <tr class="eval-rating-row">
+                  <td colspan="2"><strong>مرتبة التقدير</strong></td>
+                  <td colspan="3"><input type="text" id="eval-rating" placeholder="ممتاز / جيد جدًا / ..." /></td>
+                </tr>
+              </tfoot>
+            </table>
+          
+          </div>
+          <div class="eval-actions">
+            <button type="button" id="btn-recalc" class="btn btn-outline btn-sm">إعادة حساب المجاميع والمرتبة</button>
+          </div>
+        </div>
+
+        <div class="eval-section">
+          <h3 class="eval-section-title">بيانات إضافية</h3>
+          <div class="form-grid">
+            <div class="form-group full-width">
+              <label>عرض على لجنة الموارد البشرية</label>
+              <textarea id="committee_notes" rows="2"></textarea>
+            </div>
+            <div class="form-group full-width">
+              <label>الجزاءات التأديبية</label>
+              <textarea id="penalties" rows="2"></textarea>
+            </div>
+            <div class="form-group full-width">
+              <label>الأعمال المبادرة</label>
+              <textarea id="initiatives" rows="2"></textarea>
+            </div>
+            <div class="form-group full-width">
+              <label>التقدير المادي والأدبي</label>
+              <textarea id="appreciation" rows="2"></textarea>
+            </div>
+            <div class="form-group full-width">
+              <label>ملاحظات</label>
+              <textarea id="notes" rows="2"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" data-close="modal-eval">إلغاء</button>
+          <button type="submit" class="btn btn-primary">حفظ التقييم</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/evaluation-config-bundle.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
