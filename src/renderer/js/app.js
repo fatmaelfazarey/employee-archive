@@ -207,10 +207,10 @@ function openEditForm(emp) {
 function showDetails(emp) {
   state.currentEmployee = emp;
   const groups = [
-    { title: 'بيانات الموظف', keys: ['name','national_id','birth_date','qualification','job_title','grade','grade_date','administration','school','directorate','education_directorate',
-  'education_administration',
-  'education_level',
-  'school_name','phone','address','status'] },
+    { title: 'بيانات الموظف', keys: ['name','birth_date','qualification','job_title','grade','grade_date','administration','school',
+  
+  
+] },
     { title: 'بيانات التقييم', keys: ['eval_period_from','eval_period_to','eval_year','eval_total_score','eval_rating','eval_penalties','eval_initiatives','eval_appreciation','eval_notes'] },
   ];
 
@@ -811,11 +811,11 @@ async function renderEvalsList(employeeId) {
 window.showDetails = async function(emp) {
   state.currentEmployee = emp;
   const groups = [
-    { title: 'بيانات الموظف', keys: ['name','national_id','birth_date','qualification','job_title','grade','grade_date','administration','school','directorate','education_directorate',
-  'education_administration',
-  'education_level',
-  'school_name','phone','address','status'] },
-    { title: 'بيانات التقييم (القديمة)', keys: ['eval_period_from','eval_period_to','eval_year','eval_total_score','eval_rating'] },
+    { title: 'بيانات الموظف', keys: ['name','birth_date','qualification','job_title','grade','grade_date','administration','school',
+  
+  
+] },
+    // { title: 'بيانات التقييم (القديمة)', keys: ['eval_period_from','eval_period_to','eval_year','eval_total_score','eval_rating'] },
   ];
 
   let html = '';

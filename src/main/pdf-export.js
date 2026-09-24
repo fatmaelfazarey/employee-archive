@@ -12,7 +12,21 @@ function esc(v) {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
 }
+const ratingRules = [
+  { min: 90, label: 'كـــــــفء' },
+  { min: 80, label: 'جيد جدًا' },
+  { min: 65, label: 'جيد' },
+  { min: 50, label: 'مقبول' },
+  { min: 0, label: 'ضعيف' },
+];
 
+// بيدور على أول قاعدة الـ total بتحققها (لازم ratingRules تكون مترتبة من الأعلى للأقل)
+function calculateRatingLabel(total) {
+  const n = Number(total);
+  if (Number.isNaN(n)) return '';
+  const rule = ratingRules.find((r) => n >= r.min);
+  return rule ? rule.label : '';
+}
 // بيبني أجزاء جدول "قياس كفاية الأداء" من evaluationItems/evaluators
 // الموجودين أصلاً في shared/evaluation-config.js (مفيش أي أسماء متسحبة يدوي)
 // function buildEvalTableParts(evalRow) {
@@ -135,7 +149,15 @@ async function exportEmployeePdf(employeeId) {
     .get(employeeId);
 
   const data = { ...employee, ...(evalRow || {}) };
-
+  const DOTS = '.'.repeat(150);
+  for (const key of ['penalties', 'initiatives', 'appreciation']) {
+    if (!data[key] || String(data[key]).trim() === '') data[key] = DOTS;
+  }
+    // eval_rating: استخدم عمود rating لو محفوظ بالفعل، وإلا احسبه من total_direct
+  data.eval_rating =
+    data.rating && String(data.rating).trim() !== ''
+      ? data.rating
+      : calculateRatingLabel(data.total_direct);
   // عدّل المسار ده لو نقلت ملف employee-pdf.html لمكان تاني
   const templatePath = path.join(__dirname, '..', 'renderer', 'html', 'employee-pdf.html');
   let html = fs.readFileSync(templatePath, 'utf8');

@@ -19,7 +19,7 @@
             direction: rtl;
             font-size: 13px;
             color: #000;
-            margin: 80px 0;
+            margin: 0;
         }
 
         .header-data {
@@ -74,9 +74,7 @@
         }
 
         table.form td {
-            /* border: 1px solid #000; */
             border: 1px solid transparent;
-
             padding: 6px 8px;
             vertical-align: top;
         }
@@ -90,12 +88,10 @@
         .label-cell {
             font-weight: bold;
             width: 20%;
-            /* background: #f2f2f2; */
         }
 
         .label-value {
             text-align: right;
-
         }
 
         .textarea-cell {
@@ -153,32 +149,22 @@
 </head>
 
 <body>
-    <!-- داتا ثابته للمدرسه -->
 
-    <div>
-        <p class="header-data">مديرية التربية والتعليم بالفيوم</p>
-        <p class="header-data">إدارة سنورس التعليمية</p>
-        <p class="header-data">التعليم الإعدادي</p>
-        <p class="header-data">مدرسة الهواري بكفر فزارة ت. أ</p>
-    </div>
     <!-- الصفحة الأولى: بيانات الموظف -->
     <div class="page">
-        <div class="header-lines">
-            <div>{{directorate}}</div>
-            <div>{{administration_office}}</div>
-            <div>{{stage}}</div>
-            <div>{{school}}</div>
-        </div>
 
+        <div>
+            <p class="header-data">مديرية التربية والتعليم بالفيوم</p>
+            <p class="header-data">إدارة سنورس التعليمية</p>
+            <p class="header-data">التعليم الإعدادي</p>
+            <p class="header-data">مدرسة الهواري بكفر فزارة ت. أ</p>
+        </div>
 
         <div class="center-content">
             <p class="header-data">نموذج تقويم الأداء</p>
-            <p class="header-data">رقم (1)</p>
-            <p class="header-data ">
-                لشاغلي وظائف المعلمين وما يعادلها طبقًا للقانون رقم 155 لسنة 2007
-            <div class="header-data">عن الفترة من 31/8/2026 حتى 1/9/2025</div>
-
-            </p>
+            <p class="header-data">رقم (١)</p>
+            <p class="header-data">لشاغلي وظائف المعلمين وما يعادلها طبقًا للقانون رقم ١٥٥ لسنة ٢٠٠٧</p>
+            <div class="header-data">عن الفترة من {{period_from}} حتى {{period_to}}</div>
         </div>
 
         <div class="section-title">أولاً: بيانات من واقع ملف خدمة العامل</div>
@@ -209,40 +195,30 @@
             </tr>
         </table>
 
+        <div style="text-align: right;">
 
+            <div class="section-title">ثانيًا: الجزاءات التأديبية خلال عام التقويم</div>
+            <table class="form">
+                <tr>
+                    <td class="textarea-cell">{{penalties}}</td>
+                </tr>
+            </table>
 
+            <div class="section-title">ثالثًا: بيانات تملأ بمعرفة العامل نفسه</div>
+            <div class="form">
+                <div>
+                    <p style="font-weight: bold;">الأعمال البارزة التي قام بها خلال فترة التقويم</p>
+                    <p class="textarea-cell">{{initiatives}}</p>
+                </div>
 
-        <div class="section-title">ثانيًا: الجزاءات التأديبية خلال عام التقويم</div>
-        <table class="form">
-            <tr>
-                <td class="textarea-cell">
-                    <!-- {{penalties}} -->
-                    ......................................................................................................................................
-                </td>
-            </tr>
-        </table>
-
-        <div class="section-title">ثالثًا: بيانات تملأ بمعرفة العامل نفسه</div>
-        <div class="form">
-            <div>
-                <p style=" font-weight: bold;">الأعمال البارزة التي قام بها خلال فترة التقويم</p>
-                <p class="textarea-cell">
-                    <!-- {{initiatives}} -->
-                    ......................................................................................................................................
-                </p>
+                <div>
+                    <p style="font-weight: bold;">نواحي التقدير المادية والأدبية للأعمال الممتازة خلال فترة التقويم</p>
+                    <p class="textarea-cell">{{appreciation}}</p>
+                </div>
             </div>
 
-            <div>
-                <p style=" font-weight: bold;">نواحي التقدير المادية والأدبية للأعمال الكـــــــفءة خلال فترة التقويم
-                </p>
-            </div>
-            <div>
-                <p class="textarea-cell">
-                    ......................................................................................................................................
-                    <!-- {{appreciation}} -->
-                </p>
-            </div>
         </div>
+
     </div>
 
     <!-- الصفحة الثانية: قياس كفاية الأداء -->
@@ -269,16 +245,12 @@
             </tbody>
         </table>
 
-        <div style="margin-top:20px;"><strong>مرتبة التقدير:</strong> </div>
-        <!-- <div style="margin-top:6px;"><strong>ملاحظات اللجنة:</strong> {{committee_notes}}</div> -->
+        <div style="margin-top:20px;"><strong>مرتبة التقدير:</strong></div>
 
         <div style="margin-top:12px; display:flex; justify-content:space-evenly;">
             <strong>عرض على لجنة الموارد البشرية ووافقت على تقويم الأداء بمرتبة:</strong>
-            <!-- <strong>(كـــــــفء)</strong> -->
             <strong>({{eval_rating}})</strong>
-
         </div>
-
 
         <div class="signatures">
             <div>يعتمد مدير المدرسة<br><br><br>التوقيع</div>
