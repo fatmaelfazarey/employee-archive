@@ -22,7 +22,13 @@ function createWindow() {
   mainWindow.loadFile(path.join(__dirname, '..', 'renderer', 'index.html'));
   mainWindow.on('closed', () => { mainWindow = null; });
 }
+const { ipcMain } = require('electron');
+const { exportEmployeePdf } = require('./pdf-export');
 
+ipcMain.handle('export-employee-pdf', async (event, employeeId) => {
+  try { return await exportEmployeePdf(employeeId); }
+  catch (err) { console.error(err); return { error: err.message }; }
+});
 app.whenReady().then(() => {
   try {
     initDatabase();
@@ -34,6 +40,15 @@ app.whenReady().then(() => {
     return;
   }
   createWindow();
+
+if (!app.isPackaged) {
+  const chokidar = require('chokidar'); // npm i -D chokidar
+  const rendererPath = path.join(__dirname, '..', 'renderer');
+
+  chokidar.watch(rendererPath, { ignoreInitial: true }).on('all', () => {
+    if (mainWindow) mainWindow.webContents.reloadIgnoringCache();
+  });
+}
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });

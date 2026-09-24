@@ -33,17 +33,17 @@ const fields = [
     required: true,
     width: 200,
   },
-  {
-    key: 'national_id',
-    label: 'الرقم القومي',
-    type: 'text',
-    inTable: true,
-    inForm: true,
-    filterable: false,
-    required: false,
-    unique: true,
-    width: 140,
-  },
+  // {
+  //   key: 'national_id',
+  //   label: 'الرقم القومي',
+  //   type: 'text',
+  //   inTable: true,
+  //   inForm: true,
+  //   filterable: false,
+  //   required: false,
+  //   unique: true,
+  //   width: 140,
+  // },
   {
     key: 'birth_date',
     label: 'تاريخ الميلاد',
@@ -120,26 +120,26 @@ const fields = [
     filterable: false,
     required: false,
   },
-  {
-    key: 'education_level',
-    label: 'التعليم',
-    type: 'select',
-    inTable: false,
-    inForm: true,
-    filterable: false,
-    required: false,
-    options: ['', 'ابتدائي', 'إعدادي', 'ثانوي', 'فني', 'أخرى'],
-  },
-  {
-    key: 'phone',
-    label: 'الهاتف',
-    type: 'text',
-    inTable: true,
-    inForm: true,
-    filterable: false,
-    required: false,
-    width: 120,
-  },
+  // {
+  //   key: 'education_level',
+  //   label: 'التعليم',
+  //   type: 'select',
+  //   inTable: false,
+  //   inForm: true,
+  //   filterable: false,
+  //   required: false,
+  //   options: ['', 'ابتدائي', 'إعدادي', 'ثانوي', 'فني', 'أخرى'],
+  // },
+  // {
+  //   key: 'phone',
+  //   label: 'الهاتف',
+  //   type: 'text',
+  //   inTable: true,
+  //   inForm: true,
+  //   filterable: false,
+  //   required: false,
+  //   width: 120,
+  // },
   {
     key: 'address',
     label: 'العنوان',
@@ -161,6 +161,53 @@ const fields = [
     default: 'نشط',
     width: 90,
   },
+
+   // school data
+
+    {
+      key: 'education_directorate',
+      label: 'المديرية التعليمية',
+      type: 'text',
+      inTable: true,
+      inForm: true,
+      filterable: true,
+      required: false,
+      width: 500,
+    },
+
+    {
+      key: 'education_administration',
+      label: 'الإدارة التعليمية',
+      type: 'text',
+      inTable: true,
+      inForm: true,
+      filterable: true,
+      required: false,
+      width: 500,
+    },
+
+    {
+      key: 'education_level',
+      label: 'المرحلة التعليمية',
+      type: 'text',
+      inTable: true,
+      inForm: true,
+      filterable: true,
+      required: false,
+      width: 500,
+    },
+
+    {
+      key: 'school_name',
+      label: 'المدرسة الحالية',
+      type: 'text',
+      inTable: true,
+      inForm: true,
+      filterable: true,
+      required: false,
+      width: 500,
+    },
+
 
   // ========== بيانات التقييم ==========
   {
@@ -209,7 +256,7 @@ const fields = [
     inForm: true,
     filterable: true,
     required: false,
-    options: ['', 'ممتاز', 'جيد جدًا', 'جيد', 'مقبول', 'ضعيف'],
+    options: ['', 'كـــــــفء', 'جيد جدًا', 'جيد', 'مقبول', 'ضعيف'],
     width: 110,
   },
   {

@@ -1,3 +1,6 @@
+
+
+
 // ==================== SETUP ====================
 const F = window.FIELDS_MODULE;
 const { fields, tableFields, formFields, filterFields, requiredKeys, labelMap, typeMap } = F;
@@ -75,7 +78,7 @@ function ratingBadge(value) {
   if (!value) return '';
   const v = String(value);
   let cls = 'badge-ok';
-  if (v === 'ممتاز') cls = 'badge-excellent';
+  if (v === 'كـــــــفء') cls = 'badge-excellent';
   else if (v === 'جيد جدًا' || v === 'جيد جدا') cls = 'badge-good';
   else if (v === 'جيد') cls = 'badge-ok';
   else if (v === 'مقبول' || v === 'ضعيف') cls = 'badge-weak';
@@ -104,15 +107,27 @@ function renderTable() {
       : 'لا يوجد موظفين بعد. اضغط "+ إضافة موظف" للبدء';
     tbody.innerHTML = '<tr><td colspan="' + (tableFields.length + 1) + '" class="empty-row">' + esc(msg) + '</td></tr>';
   } else {
+    // tbody.innerHTML = list.map((emp) => {
+    //   const cells = tableFields.map((f) => '<td>' + renderCell(f, emp) + '</td>').join('');
+    //   return '<tr data-id="' + emp.id + '">' + cells +
+    //     '<td class="actions-col"><div class="row-actions">' +
+    //     '<button class="btn btn-outline btn-sm" data-action="view" data-id="' + emp.id + '">عرض</button>' +
+    //     '<button class="btn btn-outline btn-sm" data-action="edit" data-id="' + emp.id + '">تعديل</button>' +
+    //     '<button class="btn btn-danger btn-sm" data-action="delete" data-id="' + emp.id + '">حذف</button>' +
+    //     '</div></td></tr>';
+    // }).join('');
+  
     tbody.innerHTML = list.map((emp) => {
-      const cells = tableFields.map((f) => '<td>' + renderCell(f, emp) + '</td>').join('');
-      return '<tr data-id="' + emp.id + '">' + cells +
-        '<td class="actions-col"><div class="row-actions">' +
-        '<button class="btn btn-outline btn-sm" data-action="view" data-id="' + emp.id + '">عرض</button>' +
-        '<button class="btn btn-outline btn-sm" data-action="edit" data-id="' + emp.id + '">تعديل</button>' +
-        '<button class="btn btn-danger btn-sm" data-action="delete" data-id="' + emp.id + '">حذف</button>' +
-        '</div></td></tr>';
-    }).join('');
+  const cells = tableFields.map((f) => '<td>' + renderCell(f, emp) + '</td>').join('');
+  return '<tr data-id="' + emp.id + '">' + cells +
+    '<td class="actions-col"><div class="row-actions">' +
+    '<button class="btn btn-outline btn-sm" data-action="view" data-id="' + emp.id + '">عرض</button>' +
+    '<button class="btn btn-outline btn-sm" data-action="edit" data-id="' + emp.id + '">تعديل</button>' +
+    '<button class="btn btn-outline btn-sm" data-action="pdf" data-id="' + emp.id + '">تحميل PDF</button>' +
+    '<button class="btn btn-danger btn-sm" data-action="delete" data-id="' + emp.id + '">حذف</button>' +
+    '</div></td></tr>';
+}).join('');
+  
   }
   recordCount.textContent = list.length + ' سجل';
   const hasFilter = state.searchQuery || Object.keys(state.filters).some((k) => state.filters[k]);
@@ -192,7 +207,10 @@ function openEditForm(emp) {
 function showDetails(emp) {
   state.currentEmployee = emp;
   const groups = [
-    { title: 'بيانات الموظف', keys: ['name','national_id','birth_date','qualification','job_title','grade','grade_date','administration','school','directorate','education_level','phone','address','status'] },
+    { title: 'بيانات الموظف', keys: ['name','national_id','birth_date','qualification','job_title','grade','grade_date','administration','school','directorate','education_directorate',
+  'education_administration',
+  'education_level',
+  'school_name','phone','address','status'] },
     { title: 'بيانات التقييم', keys: ['eval_period_from','eval_period_to','eval_year','eval_total_score','eval_rating','eval_penalties','eval_initiatives','eval_appreciation','eval_notes'] },
   ];
 
@@ -277,7 +295,6 @@ async function loadDbInfo() {
 async function handleFormSubmit(e) {
   e.preventDefault();
   const data = getFormData();
-
   // Client-side validation
   for (const k of requiredKeys) {
     if (!data[k] || String(data[k]).trim() === '') {
@@ -358,7 +375,12 @@ async function handleImport() {
   await loadDbInfo();
   await rebuildFilterOptions();
 }
-
+async function handleExportPdf(employeeId) {
+  const res = await window.api.exportEmployeePdf(employeeId);
+  if (res?.error) { showMessage('حدث خطأ: ' + res.error, 'error'); return; }
+  if (res.canceled) return;
+  showMessage('تم حفظ الملف في: ' + res.filePath, 'success', false);
+}
 async function handleTemplate() {
   const res = await window.api.excelTemplate();
   if (res.canceled) return;
@@ -393,17 +415,27 @@ function wireEvents() {
   });
 
   // Table actions
-  tbody.addEventListener('click', (e) => {
-    const btn = e.target.closest('button[data-action]');
-    if (!btn) return;
-    const id = Number(btn.dataset.id);
-    const emp = state.employees.find((x) => x.id === id);
-    if (!emp) return;
-    if (btn.dataset.action === 'view') showDetails(emp);
-    else if (btn.dataset.action === 'edit') openEditForm(emp);
-    else if (btn.dataset.action === 'delete') confirmDelete(emp);
-  });
-
+  // tbody.addEventListener('click', (e) => {
+  //   const btn = e.target.closest('button[data-action]');
+  //   if (!btn) return;
+  //   const id = Number(btn.dataset.id);
+  //   const emp = state.employees.find((x) => x.id === id);
+  //   if (!emp) return;
+  //   if (btn.dataset.action === 'view') showDetails(emp);
+  //   else if (btn.dataset.action === 'edit') openEditForm(emp);
+  //   else if (btn.dataset.action === 'delete') confirmDelete(emp);
+  // });
+tbody.addEventListener('click', (e) => {
+  const btn = e.target.closest('button[data-action]');
+  if (!btn) return;
+  const id = Number(btn.dataset.id);
+  const emp = state.employees.find((x) => x.id === id);
+  if (!emp) return;
+  if (btn.dataset.action === 'view') showDetails(emp);
+  else if (btn.dataset.action === 'edit') openEditForm(emp);
+  else if (btn.dataset.action === 'delete') confirmDelete(emp);
+  else if (btn.dataset.action === 'pdf') handleExportPdf(id);   // ← جديد
+});
   // Form submit
   form.addEventListener('submit', handleFormSubmit);
 
@@ -461,7 +493,8 @@ function buildEvalForm() {
   tbody.innerHTML = EC.evaluationItems.map((item) => {
     const cells = [];
     for (const ev of EC.evaluators) {
-      cells.push(`<td class="col-${ev.key}"><input type="number" step="0.01" min="0" max="${item.max}" data-num="${item.key}_${ev.key}" /></td>`);
+      cells.push(`<td class="col-${ev.key}"><input type="number" step="0.01" min="0" max="${item.max}" data-num="${item.key}_${ev.key}" class="eval-num-input" /></td>`);
+      cells.push(`<td class="col-${ev.key}"><input type="text" data-txt="${item.key}_${ev.key}" class="eval-txt-input" placeholder="حروف" /></td>`);
     }
     return `<tr>
       <td>${esc(item.label)}</td>
@@ -513,7 +546,7 @@ function clearEvalForm() {
     const el = document.getElementById(id);
     if (el) el.value = '';
   });
-  document.querySelectorAll('#eval-items-body input[data-num]').forEach((inp) => { inp.value = ''; });
+  document.querySelectorAll('#eval-items-body input').forEach((inp) => { inp.value = ''; });
   updateFormStatus();
 }
 
@@ -537,6 +570,8 @@ function fillEvalForm(ev) {
     for (const ev2 of EC.evaluators) {
       const numInp = document.querySelector(`#eval-items-body input[data-num="${item.key}_${ev2.key}"]`);
       if (numInp) numInp.value = ev[`${item.key}_${ev2.key}_num`] ?? '';
+      const txtInp = document.querySelector(`#eval-items-body input[data-txt="${item.key}_${ev2.key}"]`);
+      if (txtInp) txtInp.value = ev[`${item.key}_${ev2.key}_txt`] ?? '';
     }
   }
   updateFormStatus();
@@ -562,11 +597,156 @@ function collectEvalForm() {
     for (const ev of EC.evaluators) {
       const numInp = document.querySelector(`#eval-items-body input[data-num="${item.key}_${ev.key}"]`);
       data[`${item.key}_${ev.key}_num`] = numInp ? numInp.value : '';
-      // الحروف مش في الـ UI — بنبعت null، بس الخانة موجودة في الداتا
-      data[`${item.key}_${ev.key}_txt`] = null;
+      const txtInp = document.querySelector(`#eval-items-body input[data-txt="${item.key}_${ev.key}"]`);
+      data[`${item.key}_${ev.key}_txt`] = txtInp && txtInp.value.trim() !== '' ? txtInp.value.trim() : null;
     }
   }
   return data;
+}
+
+// ==== جدول تفصيلي لكل تقييم (بند × 3 مقيّمين × 2 عمود: أرقام/حروف) ====
+// function buildEvalDetailTable(ev) {
+//   const rows = EC.evaluationItems.map((item) => {
+//     const cells = EC.evaluators.map((evltr) => {
+//       const num = ev[`${item.key}_${evltr.key}_num`];
+//       const txt = ev[`${item.key}_${evltr.key}_txt`];
+//       const numDisplay = (num !== null && num !== undefined && num !== '') ? esc(num) : '—';
+//       const txtDisplay = (txt !== null && txt !== undefined && txt !== '') ? esc(txt) : '—';
+//       return '<td class="col-' + evltr.key + '">' + numDisplay + '</td>' +
+//              '<td class="col-' + evltr.key + '">' + txtDisplay + '</td>';
+//     }).join('');
+//     return '<tr><td class="eval-item-label">' + esc(item.label) + '</td>' +
+//       '<td class="col-max">' + item.max + '</td>' + cells + '</tr>';
+//   }).join('');
+
+//   const groupHeaders = EC.evaluators.map((e) =>
+//     '<th class="col-' + e.key + '" colspan="2">' + esc(e.label) + '</th>'
+//   ).join('');
+//   const subHeaders = EC.evaluators.map((e) =>
+//     '<th class="col-' + e.key + ' sub-head">أرقام</th><th class="col-' + e.key + ' sub-head">حروف</th>'
+//   ).join('');
+
+//   const totalsRow = '<tr class="eval-totals-row">' +
+//     '<td><strong>الإجمالي</strong></td>' +
+//     '<td class="col-max">' + EC.maxTotal + '</td>' +
+//     '<td colspan="2">' + (ev.total_direct ?? '—') + '</td>' +
+//     '<td colspan="2">' + (ev.total_local ?? '—') + '</td>' +
+//     '<td colspan="2">' + (ev.total_top ?? '—') + '</td>' +
+//     '</tr>';
+
+//   return '<table class="eval-detail-table">' +
+//     '<thead>' +
+//       '<tr><th rowspan="2">البند</th><th rowspan="2">الحد الأقصى</th>' + groupHeaders + '</tr>' +
+//       '<tr>' + subHeaders + '</tr>' +
+//     '</thead>' +
+//     '<tbody>' + rows + totalsRow + '</tbody></table>';
+// }
+
+function buildEvalDetailTable(ev) {
+  const rows = EC.evaluationItems
+    .map((item, index) => {
+      const isNewGroup =
+        index === 0 ||
+        item.group !== EC.evaluationItems[index - 1].group;
+
+      const groupRow = isNewGroup && item.group
+        ? '<tr class="eval-group-row">' +
+            '<td colspan="' + (2 + EC.evaluators.length * 2) + '">' +
+              esc(item.group) +
+            '</td>' +
+          '</tr>'
+        : '';
+
+      const cells = EC.evaluators
+        .map((evltr) => {
+          const num = ev[`${item.key}_${evltr.key}_num`];
+          const txt = ev[`${item.key}_${evltr.key}_txt`];
+
+          const numDisplay =
+            num !== null && num !== undefined && num !== ''
+              ? esc(num)
+              : '—';
+
+          const txtDisplay =
+            txt !== null && txt !== undefined && txt !== ''
+              ? esc(txt)
+              : '—';
+
+          return (
+            '<td class="col-' + evltr.key + '">' + numDisplay + '</td>' +
+            '<td class="col-' + evltr.key + '">' + txtDisplay + '</td>'
+          );
+        })
+        .join('');
+
+      const itemRow =
+        '<tr>' +
+          '<td class="eval-item-label">' + esc(item.label) + '</td>' +
+          '<td class="col-max">' + item.max + '</td>' +
+          cells +
+        '</tr>';
+
+      return groupRow + itemRow;
+    })
+    .join('');
+
+  const groupHeaders = EC.evaluators
+    .map((e) =>
+      '<th class="col-' + e.key + '" colspan="2">' +
+        esc(e.label) +
+      '</th>'
+    )
+    .join('');
+
+  const subHeaders = EC.evaluators
+    .map((e) =>
+      '<th class="col-' + e.key + ' sub-head">أرقام</th>' +
+      '<th class="col-' + e.key + ' sub-head">حروف</th>'
+    )
+    .join('');
+
+  const totalsRow =
+    '<tr class="eval-totals-row">' +
+      '<td><strong>الإجمالي</strong></td>' +
+      '<td class="col-max">' + EC.maxTotal + '</td>' +
+      '<td colspan="2">' + (ev.total_direct ?? '—') + '</td>' +
+      '<td colspan="2">' + (ev.total_local ?? '—') + '</td>' +
+      '<td colspan="2">' + (ev.total_top ?? '—') + '</td>' +
+    '</tr>';
+
+  return (
+    '<table class="eval-detail-table">' +
+      '<thead>' +
+        '<tr>' +
+          '<th rowspan="2">البند</th>' +
+          '<th rowspan="2">الحد الأقصى</th>' +
+          groupHeaders +
+        '</tr>' +
+        '<tr>' + subHeaders + '</tr>' +
+      '</thead>' +
+      '<tbody>' +
+        rows +
+        totalsRow +
+      '</tbody>' +
+    '</table>'
+  );
+}
+
+
+
+function buildEvalExtraInfo(ev) {
+  const items = [
+    ['الفترة', (ev.period_from || '—') + ' إلى ' + (ev.period_to || '—')],
+    ['الجزاءات', ev.penalties],
+    ['المبادرات', ev.initiatives],
+    ['التقدير/الشكر', ev.appreciation],
+    ['ملاحظات اللجنة', ev.committee_notes],
+    ['ملاحظات', ev.notes],
+  ];
+  return items
+    .filter(([, v]) => v !== null && v !== undefined && String(v).trim() !== '')
+    .map(([label, v]) => '<div class="eval-extra-row"><strong>' + esc(label) + ':</strong> ' + esc(v) + '</div>')
+    .join('');
 }
 
 async function renderEvalsList(employeeId) {
@@ -583,18 +763,17 @@ async function renderEvalsList(employeeId) {
     html += '<div class="eval-empty">لا توجد تقييمات بعد</div>';
   } else {
     html += '<div class="eval-list">' + list.map((ev) => `
-      <div class="eval-card">
-        <div class="eval-card-info">
+      <div class="eval-card eval-card-detailed">
+        <div class="eval-card-header">
           <span><strong>السنة:</strong> ${esc(ev.eval_year) || '—'}</span>
-          <span><strong>مباشر:</strong> ${ev.total_direct ?? '—'}</span>
-          <span><strong>محلي:</strong> ${ev.total_local ?? '—'}</span>
-          <span><strong>أعلى:</strong> ${ev.total_top ?? '—'}</span>
-          <span><strong>التقدير:</strong> ${ev.rating ? '<span class="badge badge-good">' + esc(ev.rating) + '</span>' : '—'}</span>
+          <span>${ev.rating ? '<span class="badge badge-good">' + esc(ev.rating) + '</span>' : '—'}</span>
+          <div class="eval-card-actions">
+            <button class="btn btn-outline btn-sm" data-eval-action="edit" data-eval-id="${ev.id}">تعديل</button>
+            <button class="btn btn-danger btn-sm" data-eval-action="delete" data-eval-id="${ev.id}">حذف</button>
+          </div>
         </div>
-        <div class="eval-card-actions">
-          <button class="btn btn-outline btn-sm" data-eval-action="edit" data-eval-id="${ev.id}">تعديل</button>
-          <button class="btn btn-danger btn-sm" data-eval-action="delete" data-eval-id="${ev.id}">حذف</button>
-        </div>
+        ${buildEvalDetailTable(ev)}
+        <div class="eval-extra-info">${buildEvalExtraInfo(ev)}</div>
       </div>
     `).join('') + '</div>';
   }
@@ -632,7 +811,10 @@ async function renderEvalsList(employeeId) {
 window.showDetails = async function(emp) {
   state.currentEmployee = emp;
   const groups = [
-    { title: 'بيانات الموظف', keys: ['name','national_id','birth_date','qualification','job_title','grade','grade_date','administration','school','directorate','education_level','phone','address','status'] },
+    { title: 'بيانات الموظف', keys: ['name','national_id','birth_date','qualification','job_title','grade','grade_date','administration','school','directorate','education_directorate',
+  'education_administration',
+  'education_level',
+  'school_name','phone','address','status'] },
     { title: 'بيانات التقييم (القديمة)', keys: ['eval_period_from','eval_period_to','eval_year','eval_total_score','eval_rating'] },
   ];
 

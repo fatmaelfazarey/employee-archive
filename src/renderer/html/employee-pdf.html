@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <title>نموذج تقويم الأداء</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 14mm 12mm;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Tahoma, sans-serif;
+            direction: rtl;
+            font-size: 13px;
+            color: #000;
+            margin: 80px 0;
+        }
+
+        .header-data {
+            font-weight: bold;
+            margin: 10px 0 4px;
+        }
+
+        .center-content {
+            width: 100%;
+            text-align: center;
+        }
+
+        .page {
+            page-break-after: always;
+            padding: 4px;
+        }
+
+        .page:last-child {
+            page-break-after: auto;
+        }
+
+        .header-lines {
+            text-align: center;
+            margin-bottom: 6px;
+            font-size: 22px;
+        }
+
+        .header-lines div {
+            margin: 2px 0;
+            font-weight: bold;
+        }
+
+        h1.title {
+            text-align: center;
+            font-size: 16px;
+            margin: 10px 0 4px;
+        }
+
+        .subtitle {
+            font-size: 25px;
+        }
+
+        .period {
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        table.form {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 14px;
+        }
+
+        table.form td {
+            /* border: 1px solid #000; */
+            border: 1px solid transparent;
+
+            padding: 6px 8px;
+            vertical-align: top;
+        }
+
+        .section-title {
+            font-weight: bold;
+            text-decoration: underline;
+            margin: 10px 0 4px;
+        }
+
+        .label-cell {
+            font-weight: bold;
+            width: 20%;
+            /* background: #f2f2f2; */
+        }
+
+        .label-value {
+            text-align: right;
+
+        }
+
+        .textarea-cell {
+            min-height: 40px;
+        }
+
+        table.eval {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+        }
+
+        table.eval th,
+        table.eval td {
+            border: 1px solid #000;
+            padding: 5px;
+            font-size: 12px;
+        }
+
+        table.eval th {
+            background: #f2f2f2;
+            font-weight: bold;
+        }
+
+        table.eval td.item-label {
+            text-align: right;
+            font-weight: bold;
+            width: 22%;
+        }
+
+        .total-row td {
+            font-weight: bold;
+            background: #f7f7f7;
+        }
+
+        .signatures {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+        }
+
+        .signatures div {
+            text-align: center;
+            width: 45%;
+        }
+
+        table.eval .eval-group-row td {
+            background: #e6e6e6;
+            font-weight: bold;
+            text-align: right;
+            padding: 6px 8px;
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- داتا ثابته للمدرسه -->
+
+    <div>
+        <p class="header-data">مديرية التربية والتعليم بالفيوم</p>
+        <p class="header-data">إدارة سنورس التعليمية</p>
+        <p class="header-data">التعليم الإعدادي</p>
+        <p class="header-data">مدرسة الهواري بكفر فزارة ت. أ</p>
+    </div>
+    <!-- الصفحة الأولى: بيانات الموظف -->
+    <div class="page">
+        <div class="header-lines">
+            <div>{{directorate}}</div>
+            <div>{{administration_office}}</div>
+            <div>{{stage}}</div>
+            <div>{{school}}</div>
+        </div>
+
+
+        <div class="center-content">
+            <p class="header-data">نموذج تقويم الأداء</p>
+            <p class="header-data">رقم (1)</p>
+            <p class="header-data ">
+                لشاغلي وظائف المعلمين وما يعادلها طبقًا للقانون رقم 155 لسنة 2007
+            <div class="header-data">عن الفترة من 31/8/2026 حتى 1/9/2025</div>
+
+            </p>
+        </div>
+
+        <div class="section-title">أولاً: بيانات من واقع ملف خدمة العامل</div>
+        <table class="form">
+            <tr>
+                <td class="label-cell">الاســـــــــــــــــــــــــــم:</td>
+                <td class="label-value">{{name}}</td>
+            </tr>
+            <tr>
+                <td class="label-cell">الإدارةالتي يعمل بها:</td>
+                <td class="label-value">{{administration}}</td>
+            </tr>
+            <tr>
+                <td class="label-cell">تاريخ المــــــــــــيلاد:</td>
+                <td class="label-value">{{birth_date}}</td>
+            </tr>
+            <tr>
+                <td class="label-cell">الدرجة وتــــاريخها:</td>
+                <td class="label-value">{{grade}} - {{grade_date}}</td>
+            </tr>
+            <tr>
+                <td class="label-cell">الـمؤهلات الــدراسية:</td>
+                <td class="label-value">{{qualification}}</td>
+            </tr>
+            <tr>
+                <td class="label-cell">الـوظيفة التي يشغلها:</td>
+                <td class="label-value">{{job_title}}</td>
+            </tr>
+        </table>
+
+
+
+
+        <div class="section-title">ثانيًا: الجزاءات التأديبية خلال عام التقويم</div>
+        <table class="form">
+            <tr>
+                <td class="textarea-cell">
+                    <!-- {{penalties}} -->
+                    ......................................................................................................................................
+                </td>
+            </tr>
+        </table>
+
+        <div class="section-title">ثالثًا: بيانات تملأ بمعرفة العامل نفسه</div>
+        <div class="form">
+            <div>
+                <p style=" font-weight: bold;">الأعمال البارزة التي قام بها خلال فترة التقويم</p>
+                <p class="textarea-cell">
+                    <!-- {{initiatives}} -->
+                    ......................................................................................................................................
+                </p>
+            </div>
+
+            <div>
+                <p style=" font-weight: bold;">نواحي التقدير المادية والأدبية للأعمال الكـــــــفءة خلال فترة التقويم
+                </p>
+            </div>
+            <div>
+                <p class="textarea-cell">
+                    ......................................................................................................................................
+                    <!-- {{appreciation}} -->
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- الصفحة الثانية: قياس كفاية الأداء -->
+    <div class="page">
+        <h1 class="title">رابعًا: قياس كفاية الأداء</h1>
+        <table class="eval">
+            <thead>
+                <tr>
+                    <th rowspan="2">عناصر التقويم</th>
+                    <th rowspan="2">الدرجة القصوى</th>
+                    <!--EVALUATOR_HEADERS-->
+                </tr>
+                <tr>
+                    <!--EVALUATOR_SUBHEADERS-->
+                </tr>
+            </thead>
+            <tbody>
+                <!--EVAL_ROWS-->
+                <tr class="total-row">
+                    <td class="item-label">الجموع</td>
+                    <td>100</td>
+                    <!--TOTAL_CELLS-->
+                </tr>
+            </tbody>
+        </table>
+
+        <div style="margin-top:20px;"><strong>مرتبة التقدير:</strong> </div>
+        <!-- <div style="margin-top:6px;"><strong>ملاحظات اللجنة:</strong> {{committee_notes}}</div> -->
+
+        <div style="margin-top:12px; display:flex; justify-content:space-evenly;">
+            <strong>عرض على لجنة الموارد البشرية ووافقت على تقويم الأداء بمرتبة:</strong>
+            <!-- <strong>(كـــــــفء)</strong> -->
+            <strong>({{eval_rating}})</strong>
+
+        </div>
+
+
+        <div class="signatures">
+            <div>يعتمد مدير المدرسة<br><br><br>التوقيع</div>
+            <div>رئيس لجنة الموارد البشرية<br><br><br>التوقيع</div>
+        </div>
+    </div>
+
+</body>
+
+</html>

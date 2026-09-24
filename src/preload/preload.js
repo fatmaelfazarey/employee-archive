@@ -18,5 +18,7 @@ contextBridge.exposeInMainWorld('api', {
   excelImport:   ()               => ipcRenderer.invoke('excel:import'),
   excelTemplate: ()               => ipcRenderer.invoke('excel:template'),
 
+  exportEmployeePdf: (id) => ipcRenderer.invoke('export-employee-pdf', id),
+
   dbInfo:        ()               => ipcRenderer.invoke('db:info'),
 });

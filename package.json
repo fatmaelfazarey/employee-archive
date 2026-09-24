@@ -1,52 +1,54 @@
 {
-    "name":  "employee-system",
-    "version":  "1.0.0",
-    "description":  "Arabic Employee Archive System with SQLite and Excel",
-    "main":  "src/main/main.js",
-    "author":  "Your Name",
-    "license":  "MIT",
-    "scripts":  {
-                    "start":  "electron .",
-                    "rebuild":  "electron-rebuild -f -w better-sqlite3",
-                    "postinstall":  "electron-rebuild -f -w better-sqlite3",
-                    "test:db":  "set ELECTRON_RUN_AS_NODE=1\u0026\u0026 electron tests/db.test.js",
-                    "build:win":  "electron-builder --win portable",
-                    "sync:fields":  "node -e \"const fs=require(\u0027fs\u0027);const s=fs.readFileSync(\u0027src/shared/fields.js\u0027,\u0027utf8\u0027);const b=\u0027// auto-generated\\n(function(){const module={exports:{}};const exports=module.exports;\u0027+s+\u0027\\nwindow.FIELDS_MODULE=module.exports;})();\u0027;fs.writeFileSync(\u0027src/renderer/js/fields-bundle.js\u0027,b);console.log(\u0027fields-bundle.js updated\u0027);\""
-                },
-    "dependencies":  {
-                         "better-sqlite3":  "^12.4.1",
-                         "exceljs":  "^4.4.0"
-                     },
-    "devDependencies":  {
-                            "electron":  "^38.0.0",
-                            "electron-builder":  "^25.1.8",
-                            "@electron/rebuild":  "^3.7.1"
-                        },
-    "build":  {
-                  "appId":  "com.example.employee-system",
-                  "productName":  "EmployeeSystem",
-                  "directories":  {
-                                      "output":  "dist"
-                                  },
-                  "files":  [
-                                "src/**/*",
-                                "node_modules/**/*",
-                                "package.json"
-                            ],
-                  "win":  {
-                              "target":  [
-                                             {
-                                                 "target":  "portable",
-                                                 "arch":  [
-                                                              "x64"
-                                                          ]
-                                             }
-                                         ]
-                          },
-                  "portable":  {
-                                   "artifactName":  "EmployeeSystem.exe",
-                                   "requestExecutionLevel":  "user",
-                                   "unpackDirName":  false
-                               }
-              }
+    "name": "employee-system",
+    "version": "1.0.0",
+    "description": "Arabic Employee Archive System with SQLite and Excel",
+    "main": "src/main/main.js",
+    "author": "Your Name",
+    "license": "MIT",
+  "scripts": {
+  "start": "electron .",
+  "dev": "electronmon .",
+  "rebuild": "electron-rebuild -f -w better-sqlite3",
+  "postinstall": "electron-rebuild -f -w better-sqlite3",
+  "test:db": "set ELECTRON_RUN_AS_NODE=1&& electron tests/db.test.js",
+  "build:win": "electron-builder --win portable",
+  "sync:fields": "node -e \"const fs=require('fs');const s=fs.readFileSync('src/shared/fields.js','utf8');const b='// auto-generated\\n(function(){const module={exports:{}};const exports=module.exports;'+s+'\\nwindow.FIELDS_MODULE=module.exports;})();';fs.writeFileSync('src/renderer/js/fields-bundle.js',b);console.log('fields-bundle.js updated');\""
+},
+    "dependencies": {
+        "better-sqlite3": "^12.4.1",
+        "exceljs": "^4.4.0"
+    },
+    "devDependencies": {
+        "@electron/rebuild": "^3.7.1",
+        "electron": "^38.0.0",
+        "electron-builder": "^25.1.8",
+        "electronmon": "^2.0.4"
+    },
+    "build": {
+        "appId": "com.example.employee-system",
+        "productName": "EmployeeSystem",
+        "directories": {
+            "output": "dist"
+        },
+        "files": [
+            "src/**/*",
+            "node_modules/**/*",
+            "package.json"
+        ],
+        "win": {
+            "target": [
+                {
+                    "target": "portable",
+                    "arch": [
+                        "x64"
+                    ]
+                }
+            ]
+        },
+        "portable": {
+            "artifactName": "EmployeeSystem.exe",
+            "requestExecutionLevel": "user",
+            "unpackDirName": false
+        }
+    }
 }

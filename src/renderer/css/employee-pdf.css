@@ -1,0 +1,7 @@
+table.eval .eval-group-row td {
+    background: #e6e6e6;
+    font-weight: bold;
+    text-align: right;
+    padding: 6px 8px;
+    font-size: 13px;
+}
