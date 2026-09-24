@@ -2,6 +2,12 @@
 
 An Arabic employee archive system for storing employee data and evaluations, with search, filtering, and Excel import/export.
 
+
+## Download
+
+[Download the latest build](https://drive.google.com/file/d/1UlCastrh6NsdN6PoPpVb1Zd8PFud1o9w/view?usp=sharing)
+
+
 ## Quick Start
 
 ```
@@ -52,3 +58,8 @@ This updates the field definitions used by the frontend.
 * Safely eject the USB drive before removing it
 * Keep a backup of `employees.db`
 * The application enables `synchronous=FULL` to reduce the risk of database corruption
+
+
+## Download
+
+[Download the latest build](https://drive.google.com/file/d/1UlCastrh6NsdN6PoPpVb1Zd8PFud1o9w/view?usp=sharing)
